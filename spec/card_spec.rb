@@ -3,8 +3,9 @@ require 'card'
 RSpec.describe Oyster do
 
   # Doubles
-  let(:station) {double("Blackfriars")}
-  let(:station2) {double("Paddington")}
+  let(:station) {double("Blackfriars", :zone => 1)}
+  let(:station2) {double("Paddington", :zone => 1)}
+  let(:station3) {double("Paddington", :zone => 5)}
 
   describe "#Initialize" do
     it "sets journey to 0" do

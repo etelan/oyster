@@ -25,6 +25,8 @@ class JourneyLog
     @journeys << @current_journey
   end
 
+
+
   private
     def show_current_journey
       if @current_journey == nil then @current_journey = Journey.new end

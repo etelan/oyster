@@ -13,7 +13,8 @@ class Journey
   # This calculates the fare
   def fare
     total = 0
-    total += @@MIN_FARE
+    zone_price = (@journey[:start].zone - @journey[:end].zone).abs
+    total = @@MIN_FARE + zone_price
   end
 
 
