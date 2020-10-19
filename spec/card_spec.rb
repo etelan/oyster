@@ -8,7 +8,7 @@ RSpec.describe Oyster do
 
   describe "#Initialize" do
     it "sets journey to 0" do
-      expect(subject.journeys.count).to eq 0
+      expect(subject.journey_log.journeys.count).to eq 0
     end
   end
 
@@ -73,7 +73,7 @@ RSpec.describe Oyster do
     it "Touch in and Touch out creates one journey" do
       subject.top_up(20)
       subject.touch_in(station)
-      expect {subject.touch_out(station2)}.to change{subject.journeys.count}.by(1)
+      expect {subject.touch_out(station2)}.to change{subject.journey_log.journeys.count}.by(1)
     end
   end
 

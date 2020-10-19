@@ -1,8 +1,8 @@
-require_relative 'journey'
+require_relative 'journey_log'
 
 
 class Oyster
-  attr_reader :balance, :start_station, :journeys
+  attr_reader :balance, :start_station, :journey_log
 
   # Constants - Class
   @@MAX_BALANCE = 90
@@ -13,7 +13,7 @@ class Oyster
   # Set initial variables
   def initialize()
     @balance = 0
-    @journeys = []
+    @journey_log = JourneyLog.new
     @current_journey = nil
   end
 
@@ -33,12 +33,9 @@ class Oyster
 
 
   def touch_in(station)
-    # New journey
-    @current_journey = Journey.new
 
     # Set start station if have money
-    @balance >= @@MIN_FARE ? @current_journey = Journey.new : raise("You cannot cover the minimum fare")
-    @current_journey.start_journey(station)
+    @balance >= @@MIN_FARE ? @journey_log.start_journey(station) : raise("You cannot cover the minimum fare")
 
     # Puts Message
     "You have touched in at #{station}"
@@ -48,12 +45,8 @@ class Oyster
     if check_pentalty
       charge_penalty
     else
-      @current_journey.finish_journey(station)
-      add_journey()
-      deduct(@current_journey.fare)
-
-      # No longer a journey
-      @current_journey = nil
+      @journey_log.finish_journey(station)
+      deduct(@journey_log.current_journey.fare)
 
       # Puts Message
       "You have touched out at #{station}"
@@ -61,7 +54,7 @@ class Oyster
   end
 
   def in_journey?
-    !(@current_journey.complete)
+    !(@journey_log.current_journey.complete)
   end
 
   private
@@ -76,13 +69,8 @@ class Oyster
       "Your balance is now: £#{self.balance}"
     end
 
-    # Add Journey Hash
-    def add_journey
-      @journeys << @current_journey
-    end
-
     def check_pentalty
-      @current_journey == nil
+      @journey_log.current_journey == nil
     end
 
     def charge_penalty
