@@ -28,6 +28,7 @@ RSpec.describe Oyster do
   describe "#in_journey?" do
     let(:station) {double("KX")}
     it "Returns true if in transit" do
+      subject.top_up(20)
       subject.touch_in(station)
       expect(subject.in_journey?).to eq true
     end
@@ -36,7 +37,12 @@ RSpec.describe Oyster do
   describe "#touch_in" do
     let(:station) {double("KX")}
     it "Save the touch in station and return to the user" do
+      subject.top_up(20)
       expect(subject.touch_in(station)).to eq "You have touched in at #{station}"
+    end
+
+    it "Error if not enough touch in cash" do
+      expect{subject.touch_in(station)}.to raise_error "You cannot cover the minimum fare"
     end
   end
 

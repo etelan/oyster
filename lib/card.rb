@@ -3,6 +3,8 @@ class Oyster
 
   # Constants - Class
   @@MAX_BALANCE = 90
+  @@MIN_FARE = 0
+
 
   # Set initial variables
   def initialize()
@@ -22,7 +24,7 @@ class Oyster
   end
 
   def touch_in(station)
-    @start_station = station
+    @balance != @@MIN_FARE ? @start_station = station : raise("You cannot cover the minimum fare")
     "You have touched in at #{station}"
   end
 
