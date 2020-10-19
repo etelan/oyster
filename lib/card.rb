@@ -7,6 +7,7 @@ class Oyster
   # Constants - Class
   @@MAX_BALANCE = 90
   @@MIN_FARE = 1
+  @@PENALTY = 6
 
 
   # Set initial variables
@@ -44,15 +45,19 @@ class Oyster
   end
 
   def touch_out(station)
-    @current_journey.finish_journey(station)
-    add_journey(@current_journey)
-    deduct(@@MIN_FARE)
+    if check_pentalty
+      charge_penalty
+    else
+      @current_journey.finish_journey(station)
+      add_journey()
+      deduct(@current_journey.fare)
 
-    # No longer a journey
-    @current_journey = nil
+      # No longer a journey
+      @current_journey = nil
 
-    # Puts Message
-    "You have touched out at #{station}"
+      # Puts Message
+      "You have touched out at #{station}"
+    end
   end
 
   def in_journey?
@@ -72,8 +77,16 @@ class Oyster
     end
 
     # Add Journey Hash
-    def add_journey(journey)
-      @journeys << journey
+    def add_journey
+      @journeys << @current_journey
+    end
+
+    def check_pentalty
+      @current_journey == nil
+    end
+
+    def charge_penalty
+      deduct(@@PENALTY)
     end
 
 
