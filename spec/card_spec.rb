@@ -12,11 +12,38 @@ RSpec.describe Oyster do
     it "adds number to the balance" do
       expect(subject.top_up(2)).to eq "Your balance is now: £#{subject.balance}"
     end
-  end
 
-  describe "#top_up" do
     it "error if over max when trying to top up" do
       expect { subject.top_up(91) }.to raise_error("Can't Top Up - Over Max £90")
+    end
+  end
+
+  describe "#pay" do
+    it "remove number to the balance" do
+      subject.top_up(1)
+      expect(subject.pay(1)).to eq "Your balance is now: £0"
+    end
+  end
+
+  describe "#in_journey?" do
+    let(:station) {double("KX")}
+    it "Returns true if in transit" do
+      subject.touch_in(station)
+      expect(subject.in_journey?).to eq true
+    end
+  end
+
+  describe "#touch_in" do
+    let(:station) {double("KX")}
+    it "Save the touch in station and return to the user" do
+      expect(subject.touch_in(station)).to eq "You have touched in at #{station}"
+    end
+  end
+
+  describe "#touch_out" do
+    let(:station) {double("Blackfriars")}
+    it "Leaving Station sets and returns" do
+      expect(subject.touch_out(station)).to eq "You have touched out at #{station}"
     end
   end
 

@@ -5,8 +5,9 @@ class Oyster
   @@MAX_BALANCE = 90
 
   # Set initial variables
-  def initialize(bal = 0)
-    @balance = bal
+  def initialize()
+    @balance = 0
+    @start_station = nil
   end
 
   # Top up Method
@@ -14,4 +15,25 @@ class Oyster
     @balance + money > @@MAX_BALANCE ? raise("Can't Top Up - Over Max £90") : @balance += money
     "Your balance is now: £#{self.balance}"
   end
+
+  def pay(money)
+    @balance - money < 0 ? raise("Can't Top Up - Would go in debt") : @balance -= money
+    "Your balance is now: £#{self.balance}"
+  end
+
+  def touch_in(station)
+    @start_station = station
+    "You have touched in at #{station}"
+  end
+
+  def touch_out(station)
+    @start_station = nil
+    "You have touched out at #{station}"
+  end
+
+  def in_journey?
+    @start_station != nil
+  end
+
+
 end
