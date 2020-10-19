@@ -1,3 +1,6 @@
+require_relative 'journey'
+
+
 class Oyster
   attr_reader :balance, :start_station, :journeys
 
@@ -9,8 +12,8 @@ class Oyster
   # Set initial variables
   def initialize()
     @balance = 0
-    @start_station = nil
     @journeys = []
+    @current_journey = nil
   end
 
   # Top up Method
@@ -29,20 +32,31 @@ class Oyster
 
 
   def touch_in(station)
+    # New journey
+    @current_journey = Journey.new
+
     # Set start station if have money
-    @balance >= @@MIN_FARE ? @start_station = station : raise("You cannot cover the minimum fare")
+    @balance >= @@MIN_FARE ? @current_journey = Journey.new : raise("You cannot cover the minimum fare")
+    @current_journey.start_journey(station)
+
+    # Puts Message
     "You have touched in at #{station}"
   end
 
   def touch_out(station)
-    add_jouney(@start_station, station)
-    @start_station = nil
+    @current_journey.finish_journey(station)
+    add_journey(@current_journey)
     deduct(@@MIN_FARE)
+
+    # No longer a journey
+    @current_journey = nil
+
+    # Puts Message
     "You have touched out at #{station}"
   end
 
   def in_journey?
-    @start_station != nil
+    !(@current_journey.complete)
   end
 
   private
@@ -58,8 +72,8 @@ class Oyster
     end
 
     # Add Journey Hash
-    def add_jouney(start_station, end_station)
-      @journeys << {:start => start_station, :end => end_station}
+    def add_journey(journey)
+      @journeys << journey
     end
 
 
