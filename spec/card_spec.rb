@@ -51,6 +51,12 @@ RSpec.describe Oyster do
     it "Leaving Station sets and returns" do
       expect(subject.touch_out(station)).to eq "You have touched out at #{station}"
     end
+
+    it "Expect to pay for the fare when touch out" do
+      subject.top_up(2)
+      expect {subject.touch_out(station)}.to change{subject.balance}.by(-1)
+    end
+
   end
 
 end

@@ -1,9 +1,9 @@
 class Oyster
-  attr_reader :balance
+  attr_reader :balance, :MIN_FARE
 
   # Constants - Class
   @@MAX_BALANCE = 90
-  @@MIN_FARE = 0
+  @@MIN_FARE = 1
 
 
   # Set initial variables
@@ -24,18 +24,26 @@ class Oyster
   end
 
   def touch_in(station)
-    @balance != @@MIN_FARE ? @start_station = station : raise("You cannot cover the minimum fare")
+    # Set start station if have money
+    @balance >= @@MIN_FARE ? @start_station = station : raise("You cannot cover the minimum fare")
     "You have touched in at #{station}"
   end
 
   def touch_out(station)
     @start_station = nil
+    deduct(@@MIN_FARE)
     "You have touched out at #{station}"
   end
 
   def in_journey?
     @start_station != nil
   end
+
+  private
+    def deduct(money)
+      @balance -= money
+    end
+
 
 
 end
